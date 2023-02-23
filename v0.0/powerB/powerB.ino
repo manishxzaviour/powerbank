@@ -1,20 +1,23 @@
- #include <FastLED.h>
+#include <FastLED.h>
 #include <WiFi.h>
 #include <ESPmDNS.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
-#include<SPIFFS.h>
+#include "powerB.h"
 
 const char* ssid = "";
 const char* password = "";
 
-#define LED_PIN     15
-#define NUM_LEDS    216
+const int LED_PIN=15;
+const int NUM_LEDS=216;
+const int shape[2]={9,24};
 
+Display display(LED_PIN,NUM_LEDS,shape,0,255);
 CRGB leds[NUM_LEDS];
 
 void setup() {
     Serial.begin(115200);
+        FastLED.addLeds<WS2812,LED_PIN, GRB>(display.frameA, display.length);
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   while (WiFi.waitForConnectResult() != WL_CONNECTED) {
@@ -22,13 +25,13 @@ void setup() {
     delay(5000);
     ESP.restart();
   }
-
   ArduinoOTA
     .onStart([]() {
       String type;
       if (ArduinoOTA.getCommand() == U_FLASH)
         type = "sketch";
-      else // U_SPIFFS
+      else
+        // SPIFFS.end();
         type = "filesystem";
 
       Serial.println("Start updating " + type);
@@ -47,42 +50,14 @@ void setup() {
       else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
       else if (error == OTA_END_ERROR) Serial.println("End Failed");
     });
-
   ArduinoOTA.begin();
-
   Serial.println("Ready");
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
-
-  FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEDS);
-//    
-//  for(int i=0;i<NUM_LEDS;i++){
-//    leds[i] = CRGB(255, 255, 255);
-//    }
-//        FastLED.show();
-//  for(int i=NUM_LEDS;i>0;i--){
-//  leds[i] = CRGB(0, 0, 0);
-////  delay(50);
-//    }
-// FastLED.show();
-//      
-//  for(int i=0;i<NUM_LEDS;i++){
-//  leds[i] = CRGB(255, 0, 0);
-//  FastLED.show();
-//  delay(50);
-//    }
-//      
-//  for(int i=0;i<NUM_LEDS;i++){
-//  leds[i] = CRGB(0, 255, 0);
-//  FastLED.show();
-//  delay(50);
-//    }
-//    
-//  for(int i=0;i<NUM_LEDS;i++){
-//  leds[i] = CRGB(0, 0, 255);
-//  FastLED.show();
-//  delay(50);
-//    }
+  display.solidC(0,0,100);
+  display.M2A();
+  display.frameShow();
+  FastLED.show();
 }
 
 void loop() {
