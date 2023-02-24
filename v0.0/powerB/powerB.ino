@@ -91,4 +91,29 @@ void setup() {
 
 void loop() {
   ArduinoOTA.handle();server.handleClient();
+   if(digitalRead(lb)==1){
+    display.solidC(0,100,0,23,0);
+    }else{display.solidC(0,0,0,23,0);}
+      if(digitalRead(rb)==1){
+    display.solidC(0,100,0,0,0);
+    }
+    else{display.solidC(0,0,0,0,0);}
+    if(digitalRead(dpad[4])==0){
+    display.frameM[display.center[0]][display.center[1]+1]=CRGB(0,100,0);
+    }else{    display.frameM[display.center[0]][display.center[1]+1]=CRGB(0,0,0);}
+    if(digitalRead(dpad[3])==0){
+    display.frameM[display.center[0]][display.center[1]-1]=CRGB(0,100,0);
+    }else{    display.frameM[display.center[0]][display.center[1]-1]=CRGB(0,0,0);}
+    if(digitalRead(dpad[0])==0){
+    display.frameM[display.center[0]][display.center[1]]=CRGB(0,100,0);
+    }else{    display.frameM[display.center[0]][display.center[1]]=CRGB(0,0,0);}
+    if(digitalRead(dpad[1])==0){
+    display.frameM[display.center[0]+1][display.center[1]]=CRGB(0,100,0);
+    }else{    display.frameM[display.center[0]+1][display.center[1]]=CRGB(0,0,0);
+    }
+    if(digitalRead(dpad[2])==0){
+    display.frameM[display.center[0]-1][display.center[1]]=CRGB(0,100,0);
+    }else{    display.frameM[display.center[0]-1][display.center[1]]=CRGB(0,0,0);
+    }
+    display.frameShow();
 }
