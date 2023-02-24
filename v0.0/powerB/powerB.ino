@@ -148,7 +148,7 @@ void setup() {
     pinMode(dpad[4],INPUT_PULLUP);
     server.on("/", hTestIp);
     server.begin();
-    display.solidC(0,0,-);
+    display.solidC(0,0,0);
     display.frameShow();
 }
 
