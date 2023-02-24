@@ -31,3 +31,24 @@ class Display{
     void solidCt(byte r,byte g,byte b,int ox,int oy,int l,int d);
     void solidCx(byte r,byte g,byte b,int ox,int oy,int l,int w,bool d);
 };
+
+typedef struct {
+    int lb;
+    int rb;
+    int dpad[5];
+}Button;
+
+class Menu{
+    public:
+    int option;
+    int lastopt;
+    Display* display;
+    Button* button;
+    Menu(Display* display,Button* button);
+    void drawOpt();
+    void pong();
+    void op2();
+    void op3();
+    void op4();
+    void op5();
+};
