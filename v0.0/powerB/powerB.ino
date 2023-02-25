@@ -104,7 +104,7 @@ void wifiH(){
     })
     .onProgress([](unsigned int progress, unsigned int total) {
       Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
-      display.solidCr(10,int(progress / (total / 100)),10,0,display.center[1]+1,int(progress / (total / display.shape[0])),display.center[1]-1);
+      display.solidCr(10,int(progress / (total / 100)),10,0,display.center[1]+1,int(progress / (total / (display.shape[0]-1))),display.center[1]-1);
       display.frameShow();
     })
     .onError([](ota_error_t error) {
@@ -150,6 +150,7 @@ void setup() {
     server.begin();
     display.solidC(0,0,0);
     display.frameShow();
+    menu.pong();
 }
 
 void loop() {

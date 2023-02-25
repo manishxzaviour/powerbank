@@ -27,7 +27,8 @@ class Display{
     void solidCr(byte r,byte g,byte b,int ox,int oy,int fx,int fy);
     void solidCd(byte r,byte g,byte b,int ox,int oy,int l,int d);
     void solidCl(byte r,byte g,byte b,int ox,int oy,int l,int d);
-    void solidCa(byte r,byte g,byte b,int ox,int oy,int l,float a);
+    void solidCl(byte r,byte g,byte b,int ox,int oy,int fx,int fy,bool a);
+    void solidCc(byte r,byte g,byte b,int ox,int oy,int rad);
     void solidCt(byte r,byte g,byte b,int ox,int oy,int l,int d);
     void solidCx(byte r,byte g,byte b,int ox,int oy,int l,int w,bool d);
 };
