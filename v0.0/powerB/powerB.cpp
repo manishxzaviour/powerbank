@@ -139,58 +139,70 @@ void Display::solidCl(byte r,byte g,byte b,int ox,int oy,int l,int d){
     break;
     }
 }
-void Display::solidCl(byte r,byte g,byte b,int ox,int oy,int fx,int fy,bool a){
+void Display::solidCl(byte r,byte g,byte b,int ox,int oy,int fx,int fy,bool a){//
   //Bresenhams Line algo
-  int x1=min(ox,fx);
-  int x2=max(ox,fx);
-  int y1=min(oy,fy);
-  int y2=max(oy,fy);
-  float slope=(y2-y1)/(x2-x1);
-  int m_new = 2 * (y2 - y1);
-    int slope_error_new = m_new - (x2 - x1);
+  int x1,y1,x2,y2;//,m_new,slope_error_new;
+  // float slope=(y2-y1)/(x2-x1);
+  // if(!a){
+  //    x1=min(ox,fx);
+  //    x2=max(ox,fx);
+  //    y1=min(oy,fy);
+  //    y2=max(oy,fy);
+  // }
+  // else{
+     x1=ox;
+     x2=fx;
+     y1=oy;
+     y2=fy;
+  // }
+  int m_new = 2 * abs(y2 - y1);
+    int slope_error_new = m_new - abs(x2 - x1);
     for (int x = x1, y = y1; x <= x2; x++) {
+      if(x<24&&y<9&&x>-1&&y>-1)
         this->frameM[x][y]=CRGB(r,g,b);
          slope_error_new += m_new;
         if (slope_error_new >= 0) {
             y++;
-            slope_error_new -= 2 * (x2 - x1);
+            slope_error_new -= 2 * abs(x2 - x1);
         }
     }
 }
 void Display::solidCc(byte r,byte g,byte b,int ox,int oy,int rad){
   //midpoint circle algo
     int x = rad, y = 0;
-    this->frameM[x + ox][y + oy]=CRGB(r,g,b);
-    if (rad > 0)
-    {
-        this->frameM[x + ox][-y + oy]=CRGB(r,g,b);
-        this->frameM[y + ox][-x + oy]=CRGB(r,g,b);
-        this->frameM[-x + ox][y + oy]=CRGB(r,g,b);
-        this->frameM[-y + ox][x + oy]=CRGB(r,g,b);
-    }
-    int P = 1 - rad;
-    while (x > y)
-    {
-        y++;
-        if (P <= 0)
-          P = P + 2*y + 1;
-        else
-        {
-            x--;
-            P = P + 2*y - 2*x + 1;
-        }
-        if (x < y){break;}
-        this->frameM[x + ox][y + oy]=CRGB(r,g,b);
-        this->frameM[-x + ox][y + oy]=CRGB(r,g,b);
-        this->frameM[x + ox][-y + oy]=CRGB(r,g,b);
-        this->frameM[-x + ox][-y + oy]=CRGB(r,g,b);
-        if (x != y)
-        {
-            this->frameM[y + ox][x + oy]=CRGB(r,g,b);
-            this->frameM[-y + ox][x + oy]=CRGB(r,g,b);
-            this->frameM[y + ox][-x + oy]=CRGB(r,g,b);
-            this->frameM[-y + ox][-x + oy]=CRGB(r,g,b);
-        }
+    if(ox<24&&oy<9&&ox>-1&&oy>-1){
+      this->frameM[x + ox][y + oy]=CRGB(r,g,b);
+      if (rad > 0)
+      {
+          this->frameM[x + ox][-y + oy]=CRGB(r,g,b);
+          this->frameM[y + ox][-x + oy]=CRGB(r,g,b);
+          this->frameM[-x + ox][y + oy]=CRGB(r,g,b);
+          this->frameM[-y + ox][x + oy]=CRGB(r,g,b);
+      }
+      int P = 1 - rad;
+      while (x > y)
+      {
+          y++;
+          if (P <= 0)
+            P = P + 2*y + 1;
+          else
+          {
+              x--;
+              P = P + 2*y - 2*x + 1;
+          }
+          if (x < y){break;}
+          this->frameM[x + ox][y + oy]=CRGB(r,g,b);
+          this->frameM[-x + ox][y + oy]=CRGB(r,g,b);
+          this->frameM[x + ox][-y + oy]=CRGB(r,g,b);
+          this->frameM[-x + ox][-y + oy]=CRGB(r,g,b);
+          if (x != y)
+          {
+              this->frameM[y + ox][x + oy]=CRGB(r,g,b);
+              this->frameM[-y + ox][x + oy]=CRGB(r,g,b);
+              this->frameM[y + ox][-x + oy]=CRGB(r,g,b);
+              this->frameM[-y + ox][-x + oy]=CRGB(r,g,b);
+          }
+      }
     }
 }
 void Display::solidCt(byte r,byte g,byte b,int ox,int oy,int l,int d){
@@ -283,13 +295,13 @@ Menu::Menu(Display* display,Button* button){
   this->button=button;
 }
 
-void Menu::pong(){
+void Menu::pong(){//
   int posP1=this->display->center[1];
   int posP2=this->display->center[1];
   bool startF=1;
   this->display->solidC(1,1,1);
-  this->display->solidCl(50,50,50,0,0,this->display->shape[1]-1,0);
-  this->display->solidCl(50,50,50,this->display->shape[0]-1,0,this->display->shape[1]-1,0);
+  this->display->solidCl(50,50,50,0,0,this->display->shape[1],0);
+  this->display->solidCl(50,50,50,this->display->shape[0]-1,0,this->display->shape[1],0);
   this->display->solidCl(50,5,5,1,posP1-1,3,0);
   this->display->solidCl(50,5,5,this->display->shape[0]-2,posP2-1,3,0);
   this->display->solidCl(0,10,10,2,0,8,3);
@@ -319,8 +331,10 @@ void Menu::pong(){
   this->display->solidCl(50,50,50,this->display->shape[0]-1,0,this->display->shape[1],0);
   this->display->frameShow();
   while(1){  
-    // if(startF){
-    // }
+    if(startF){
+      startF=0;
+      this->display->solidCl(50,32,0,this->display->center[0],this->display->center[1],2,int(random(0,this->display->shape[1]-1)),1);
+    }
     if(digitalRead(this->button->lb)&&digitalRead(this->button->rb)&&!digitalRead(this->button->dpad[0])){break;}
 
     if(digitalRead(this->button->rb)){
@@ -352,6 +366,77 @@ void Menu::pong(){
         posP1=this->display->shape[1]-2;
         this->display->solidCl(50,5,5,this->display->shape[0]-2,posP1,2,0);
       }
+    }
+    this->display->frameShow();
+  }
+}
+
+void Menu::dieThrow(){
+  int prevThrow=random(1,7);
+  while(1){
+    if(digitalRead(this->button->lb)&&digitalRead(this->button->rb)&&!digitalRead(this->button->dpad[0])){break;}
+    int lb=digitalRead(this->button->lb);
+    int rb=digitalRead(this->button->rb);
+    if((lb&&!rb)||(!lb&&rb)){
+      if(lb){
+        this->display->solidCl(20,50,10,this->display->shape[0]-1,this->display->shape[1]-1,5,2);
+        this->display->solidCl(1,1,1,0,0,5,0);
+        this->display->frameShow();
+      }
+      else{
+        this->display->solidCl(1,1,1,this->display->shape[0]-1,this->display->shape[1]-1,5,2);
+        this->display->solidCl(20,50,10,0,0,5,0);
+        this->display->frameShow();
+      }
+      this->display->solidCr(0,0,0,this->display->center[0]-4,this->display->center[1]-4,this->display->center[0]+4,this->display->center[1]+4);
+      this->display->solidCc(30,50,50,this->display->center[0],this->display->center[1],2);
+      this->display->frameShow();
+      delay(150);
+      this->display->solidCr(0,0,0,this->display->center[0]-4,this->display->center[1]-4,this->display->center[0]+4,this->display->center[1]+4);
+      this->display->solidCc(30,50,50,this->display->center[0],this->display->center[1],5);
+      this->display->frameShow();
+      while(1){
+        int thisThrow=random(1,7);
+        if(prevThrow!=thisThrow){  prevThrow=thisThrow; break;}
+      }
+      switch (prevThrow)
+      {
+        case 1:
+          this->display->solidCr(70,10,10,this->display->center[0]-1,this->display->center[1]-1,this->display->center[0]+1,this->display->center[1]+1);
+        break;
+        case 2:
+          this->display->solidCr(70,10,10,this->display->center[0]-3,this->display->center[1]-3,this->display->center[0]-1,this->display->center[1]-1);
+          this->display->solidCr(70,10,10,this->display->center[0]+3,this->display->center[1]+3,this->display->center[0]+1,this->display->center[1]+1);
+        break;
+        case 3:
+          this->display->solidCr(70,10,10,this->display->center[0]-3,this->display->center[1]-3,this->display->center[0]-2,this->display->center[1]-2);
+          this->display->solidCr(70,10,10,this->display->center[0]-1,this->display->center[1]-1,this->display->center[0]+1,this->display->center[1]+1);
+          this->display->solidCr(70,10,10,this->display->center[0]+3,this->display->center[1]+3,this->display->center[0]+2,this->display->center[1]+2);
+        break;
+        case 4:
+          this->display->solidCr(70,10,10,this->display->center[0]-2,this->display->center[1]-2,this->display->center[0]-1,this->display->center[1]-1);
+          this->display->solidCr(70,10,10,this->display->center[0]+2,this->display->center[1]+2,this->display->center[0]+1,this->display->center[1]+1);
+          this->display->solidCr(70,10,10,this->display->center[0]-2,this->display->center[1]+2,this->display->center[0]-1,this->display->center[1]+1);
+          this->display->solidCr(70,10,10,this->display->center[0]+2,this->display->center[1]-2,this->display->center[0]+1,this->display->center[1]-1);
+        break;
+        case 5:
+          this->display->solidCr(70,10,10,this->display->center[0]-3,this->display->center[1]-3,this->display->center[0]-2,this->display->center[1]-2);
+          this->display->solidCr(70,10,10,this->display->center[0]-3,this->display->center[1]+3,this->display->center[0]-2,this->display->center[1]+2);
+          this->display->solidCr(70,10,10,this->display->center[0]-1,this->display->center[1]-1,this->display->center[0]+1,this->display->center[1]+1);
+          this->display->solidCr(70,10,10,this->display->center[0]+3,this->display->center[1]+3,this->display->center[0]+2,this->display->center[1]+2);
+          this->display->solidCr(70,10,10,this->display->center[0]+3,this->display->center[1]-3,this->display->center[0]+2,this->display->center[1]-2);
+        break;
+        case 6:
+          this->display->solidCr(70,10,10,this->display->center[0]-3,this->display->center[1]-3,this->display->center[0]-2,this->display->center[1]-2);
+          this->display->solidCr(70,10,10,this->display->center[0]-3,this->display->center[1]+3,this->display->center[0]-2,this->display->center[1]+2);
+          this->display->solidCr(70,10,10,this->display->center[0]+3,this->display->center[1]+3,this->display->center[0]+2,this->display->center[1]+2);
+          this->display->solidCr(70,10,10,this->display->center[0]+3,this->display->center[1]-3,this->display->center[0]+2,this->display->center[1]-2);
+          this->display->solidCl(70,10,10,this->display->center[0]-2,this->display->center[1],4,1);
+          this->display->solidCl(70,10,10,this->display->center[0]+2,this->display->center[1],4,3);
+        break;
+      }
+      this->display->frameShow();
+      delay(1000);
     }
     this->display->frameShow();
   }

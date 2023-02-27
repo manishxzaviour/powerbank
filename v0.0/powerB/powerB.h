@@ -48,7 +48,7 @@ class Menu{
     Menu(Display* display,Button* button);
     void drawOpt();
     void pong();
-    void op2();
+    void dieThrow();
     void op3();
     void op4();
     void op5();
